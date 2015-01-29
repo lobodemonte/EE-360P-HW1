@@ -29,3 +29,21 @@ Question 3: Peterson's Algorithm with modifications; show these modifications ma
 		
 		In this scenario, both Process0 and Process1 manage to enter the CS.
 		
+Question 4: 
+		
+Question 5: Prove that Peterson's Algorithm is Starvation free.
+
+	Suppose Process1 waits forever in busywait, meaning Flag[0] == TRUE && Turn == 0.
+	
+	Then Process0 is either: 
+			1. About to Enter
+			2. Stuck in busywait 
+			3. In CS
+			
+		If (1), then the moment Process0 executes Turn.set(1), Process1 exits its busywait.
+		If (2), then Turn == 1, and if that is so Process1 is not in busywait.
+		If (3), then Process0 will exit the CS and set Flag[1] = FALSE, allowing Process1 to exit its busywait.
+		
+	Hence there is no way for Process0 to behave in a manner that keeps Process1 starved.
+	
+	
