@@ -1,0 +1,31 @@
+Question 3: Peterson's Algorithm with modifications; show these modifications make it incorrect.
+
+	A:	The process sets the turn variable to itself. 
+	
+		Suppose, 
+	
+		Process0: Flag[0] = TRUE --> Turn.set(0) --> wait (Flag[1] && Turn == 1)  --> (switched to Process1)
+																				
+		(Then Process1 kicks in after Process0 exits the busy wait)
+		
+		Process1: Flag[1] = TRUE --> Turn.set(1) --> wait (Flag[0] && Turn == 0) 
+		
+		(Then Process1 exits the busy wait)
+		
+		In this scenario both Process0 and Process1 enter the CS.
+		
+	B: The process sets the turn variable before setting the wantCS variable (here I called wantCS as Flag)
+	
+		Suppose, 
+		
+		Process0: Turn.set(1) --> (switched to process1)
+		Process1: Turn.set(0) --> Flag[1] = TRUE --> wait (Flag[0] && Turn == 0) -->
+		
+		(Then Process1 exists the busy wait because Flag[0] is still FALSE, but Process0 goes after)
+		
+		Process0: Flag[0] = TRUE -->  wait (Flag[1] && Turn == 1) -->
+		
+		(Then Process0 exits the busy wait because the Turn is set to 0)
+		
+		In this scenario, both Process0 and Process1 manage to enter the CS.
+		

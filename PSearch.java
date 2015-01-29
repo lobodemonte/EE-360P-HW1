@@ -53,7 +53,6 @@ public class PSearch {
             }
         }
         executor.shutdown();
-	
 		return result;
 	}
 
