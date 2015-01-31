@@ -1,3 +1,5 @@
+Sean Tubbs (smt2436), and Erik Lopez ()
+
 Question 3: Peterson's Algorithm with modifications; show these modifications make it incorrect.
 
 	A:	The process sets the turn variable to itself. 
