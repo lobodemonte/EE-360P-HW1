@@ -27,10 +27,24 @@ Question 3: Peterson's Algorithm with modifications; show these modifications ma
 		
 		(Then Process0 exits the busy wait because the Turn is set to 0)
 		
-		In this scenario, both Process0 and Process1 manage to enter the CS.
+		In this scenario, both Process0 and Process1 manage to enter the CS, violating mutex.
 		
-Question 4: 
+
+
+Question 4: Show that the bakery algorithm does not work in the absence of choosing variables.
+
+	Consider two processes, P0 and P1, in a bakery algorithm that does not implement choosing variables. Now, consider the following sequence:
+
+	P0: P0 completes the first for loop in requestCS, exiting with temp=0. Before number[0] is assigned, Process 1 interrupts.
+
+	P1: P1 completes the initial for loop, exiting with temp=0. number[1] is assigned the value 1. P1 now makes it all the way through the second for loop, because every value in the number array (besides number[1] corresponding to P1 itself) is 0, meaning not requesting the CS. P1 now enters the CS.
+
+	P0: Now P0 resumes. number[0] is assigned the value 1. P0 enters the second for loop, makes it past number[0] because that corresponds to P0 itself, makes it past number[1] because number[0] == number[1] (both are 1), but 0 < 1, so P0 gets priority over P1, and clears the rest of the number array because all other entries are 0. P0 enters the CS.
+
+	In this case, both P0 and P1 manage to enter the CS, violating mutex.
 		
+
+
 Question 5: Prove that Peterson's Algorithm is Starvation free.
 
 	Suppose Process1 waits forever in busywait, meaning Flag[0] == TRUE && Turn == 0.
@@ -45,5 +59,19 @@ Question 5: Prove that Peterson's Algorithm is Starvation free.
 		If (3), then Process0 will exit the CS and set Flag[1] = FALSE, allowing Process1 to exit its busywait.
 		
 	Hence there is no way for Process0 to behave in a manner that keeps Process1 starved.
+
+
+
+Question 6: Modify Peterson's algorithm to use two variables turn0 (only written to by P0) and turn1 (only written to by P1) instead of a multiwrite variable turn.
+
+	Imagine two variables, turn0 and turn1, impelemented in an array as turn[0] and turn[1], respectively. Initially, turn = {0 , 0} and wantCS = {false, false}
 	
-	
+	RequestCS:
+	wantCS[i] = true;
+	turn[i] = turn[1 - i] + 1;
+
+	while(wantCS[1 - i] && (turn[1-i] < turn[i]) { no_op;}
+
+	releaseCS:
+	wantCS[i] = false;
+	turn[i] = 0;
