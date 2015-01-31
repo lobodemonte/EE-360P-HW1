@@ -1,4 +1,7 @@
+//Erik Lopez and Sean Tubbs(smt2436)
+
 import java.util.concurrent.Callable;
+
 
 
 public class ParallelSearchTask implements Callable<Integer> {

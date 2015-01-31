@@ -1,3 +1,5 @@
+//Erik Lopez and Sean Tubbs(smt2436)
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
