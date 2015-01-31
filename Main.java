@@ -12,8 +12,8 @@ public class Main{
 	   }
 	   
 	   int Arrays[][] = { 
-			   {42,2,9,25,49},
-			   hugestArray
+			   {42,2,9,25,49}
+			   //,hugestArray
 	   };
 	   
 	   

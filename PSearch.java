@@ -12,6 +12,9 @@ public class PSearch {
 		
 		//Check for dumb inputs and throw them back at the User for being dumb
 		if (A.length <= 0){ throw new IllegalArgumentException("Array can't be empty.\n");}
+		
+		//TODO: are we certain numThreads > A.length should throw an exception? Maybe
+		//just not use some of the threads?
 		if (numThreads <= 0 || numThreads > A.length){throw new IllegalArgumentException("The number of threads has to be greater than zero and no more than the size of the array.\n");}
 		
 		//Let's split the Array into the necessary amount of smaller chunks
@@ -20,9 +23,13 @@ public class PSearch {
 		
 		for(int i = 0; i < numThreads; i++){
 			int begin = i * chunkSize;
+			//TODO: this size thing is fucking up. Example, 4 threads and 5 elements
             int length = Math.min(A.length - begin, chunkSize);
             
             int[] temp = new int[length];
+            
+            //TODO: arraycopy involves touching every element ... at that point why not just
+            //do a linear search? You want to pass your task begin and end indices instead
             System.arraycopy(A, begin, temp, 0, length);
             chunks[i] = temp;
 		}
