@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 
 public class PSort implements Runnable {
 	
-	private static ExecutorService threadPool = Executors.newCachedThreadPool();
 	private static ExecutorService es;
 	private int[] A;
 	private int begin, end;
@@ -19,7 +18,6 @@ public class PSort implements Runnable {
 		if (begin > end){throw new IllegalArgumentException("Begin value is greater than End value");}
 		
 		
-//		es = Executors.newSingleThreadExecutor();
 		es = Executors.newCachedThreadPool();
 		PSort ps = new PSort(A, begin, end);
 		Future<?> f1 = es.submit(ps);
@@ -35,7 +33,6 @@ public class PSort implements Runnable {
 		}
 		
 		es.shutdown();
-		ps.threadPool.shutdown();
 
 	}
 	
@@ -55,12 +52,52 @@ public class PSort implements Runnable {
 				return;
 			}
 			
+			//another base case, sometimes partition can get stuck if there are only 2 elements in array
+			if(end - begin == 2) {
+				if(A[begin] > A[begin + 1]) {
+					int temp = A[begin];
+					A[begin] = A[begin+1];
+					A[begin+1] = temp;
+				}
+				return;
+			}
+			
 			//rather than (begin + end)/2 to avoid integer overflow for large array sizes
-			int midpoint = begin + ((end - begin) / 2);
+			int pivot = A[begin + ((end - begin) / 2)];
+			
+			int b = begin;
+			int e = end - 1;
+			int temp = 0;
+			
+			//when the loop finishes, b will have the index of the first element in the upper partition,
+			//and e will have the index of the last element in the lower partition. The pivot value could
+			//be in either partition
+			while(b <= e) {
+				while(A[b] < pivot) {
+					b++;
+				}
+				while(A[e] > pivot) {
+					e--;
+				}
+				if(b <= e) {
+					temp = A[b];
+					A[b] = A[e];
+					A[e] = temp;
+					b++;
+					e--;
+				}
+			}
+			
+			int partition = b;
+			
+			//for mergeSort:
+			//partition = begin + ((end - begin) / 2);
+			//System.out.println("BEGIN, PARTITION, END: " + begin + " " + partition + " " + end);
+			
 			
 			//sort recursively w/threads
-			PSort ps1 = new PSort(A, begin, midpoint);
-			PSort ps2 = new PSort(A, midpoint, end);
+			PSort ps1 = new PSort(A, begin, partition);
+			PSort ps2 = new PSort(A, partition, end);
 			
 			Future<?> f1 = es.submit(ps1);
 			Future<?> f2 = es.submit(ps2);
@@ -76,7 +113,8 @@ public class PSort implements Runnable {
 				e1.printStackTrace();
 			}
 
-			combineSortedHalves(A, begin, midpoint, end);	
+			//for mergeSort:
+			//combineSortedHalves(A, begin, partition, end);	
 		}
 		
 		public static void combineSortedHalves(int[] A, int begin, int midpoint, int end) {
