@@ -1,3 +1,5 @@
+import java.util.Random;
+
 //Erik Lopez and Sean Tubbs(smt2436)
 
 public class Main{
@@ -6,16 +8,22 @@ public class Main{
 	   // you do not need to write this code. 
 	   // create and populate array A with values
 	   
+	   Random x = new Random();
+	   
+	   
 	   int[] hugestArray = new int[10000];
+	   int[] hugestArrayRandomized = new int[hugestArray.length];
 	   
 	   //populate, sorted in REVERSE
 	   for(int i = 0; i < hugestArray.length; i++) {
 		   hugestArray[i] = hugestArray.length - i;
+		   hugestArrayRandomized[i] = hugestArray[i] + x.nextInt();
 	   }
 	   
 	   int Arrays[][] = { 
 			   {42,2,9,25,49}
 			   //,hugestArray
+			   ,hugestArrayRandomized
 	   };
 	   
 	   
@@ -25,7 +33,7 @@ public class Main{
 	   
 	   
 	   
-	   
+	   /*
 	   
 	   
 	   
@@ -52,7 +60,7 @@ public class Main{
 	   
 
 
-	   
+	   */
 	 
 	   
 	   
@@ -75,11 +83,22 @@ public class Main{
 		   // call PSort 
 		   PSort.parallelSort(A, 0, A.length);
 		   
+		   boolean flag = false;
+		   
 		   System.out.println("After sorting, array is: ");
 		   for(int i = 0; i < A.length; i++) {
 			   System.out.print(A[i] + " ");
+			   
+			   if(i != A.length-1 && A[i] > A[i+1]) {
+				   flag = true;
+			   }
 		   }
-		   System.out.println();
+		   
+		   if(flag){
+			   System.out.print("NOT!!!! ");
+		   }
+		   
+		   System.out.println("sorted correctly");
 	   }
 	   
 	   // verify if A is sorted
