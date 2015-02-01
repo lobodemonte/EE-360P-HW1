@@ -1,7 +1,17 @@
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 //Erik Lopez and Sean Tubbs(smt2436)
 
 
-public class PSort {
+public class PSort implements Runnable {
+	
+	private static ExecutorService threadPool = Executors.newCachedThreadPool();
+	private static ExecutorService es;
+	private int[] A;
+	private int begin, end;
 	
 	public static void parallelSort(int[] A, int begin, int end) {
 		
@@ -9,42 +19,36 @@ public class PSort {
 		if (begin > end){throw new IllegalArgumentException("Begin value is greater than End value");}
 		
 		
-		//rather than (begin + end)/2 to avoid integer overflow for large array sizes
-		int midpoint = begin + ((end - begin) / 2);		
-		
-		PSortTask pst1 = new PSortTask(A, begin, midpoint);
-		PSortTask pst2 = new PSortTask(A, midpoint, end);
-		Thread t1 = new Thread(pst1);
-		Thread t2 = new Thread(pst2);
-		
-		t1.start();
-		t2.start();
+//		es = Executors.newSingleThreadExecutor();
+		es = Executors.newCachedThreadPool();
+		PSort ps = new PSort(A, begin, end);
+		Future<?> f1 = es.submit(ps);
 		
 		try {
-			t1.join();
-			t2.join();
-		} catch (InterruptedException e) {
+			f1.get();
+		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
-		PSortTask.combineSortedHalves(A, begin, midpoint, end);
-		
+		es.shutdown();
+		ps.threadPool.shutdown();
+
 	}
 	
-	static private class PSortTask implements Runnable {
-
-		private int[] A;
-		private int begin, end;
 		
-		public PSortTask(int[] A, int begin, int end) {
+		private PSort(int[] A, int begin, int end) {
 			this.A = A;
 			this.begin = begin;
 			this.end = end;
 		}
 		
-		private void recurse() {
-			
+		
+		@Override
+		public void run() {
 			//if subsection of array is 1 element or less, it is already sorted
 			//(ex: begin = 0, end = 2 is 2 elements, at indices 0 and 1)
 			if(end - begin < 2) {
@@ -55,18 +59,24 @@ public class PSort {
 			int midpoint = begin + ((end - begin) / 2);
 			
 			//sort recursively w/threads
-			PSortTask pst1 = new PSortTask(A, begin, midpoint);
-			PSortTask pst2 = new PSortTask(A, midpoint, end);
+			PSort ps1 = new PSort(A, begin, midpoint);
+			PSort ps2 = new PSort(A, midpoint, end);
 			
-			pst1.recurse();
-			pst2.recurse();
+			Future<?> f1 = es.submit(ps1);
+			Future<?> f2 = es.submit(ps2);
+			
+			try {
+				f1.get();
+				f2.get();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExecutionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 			combineSortedHalves(A, begin, midpoint, end);	
-		}
-		
-		@Override
-		public void run() {
-			recurse();
 		}
 		
 		public static void combineSortedHalves(int[] A, int begin, int midpoint, int end) {
@@ -116,9 +126,5 @@ public class PSort {
 				aIndex++;
 			}	
 		}
-		
+				
 	}
-	
-	
-
-}
