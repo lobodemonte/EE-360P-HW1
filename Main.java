@@ -1,6 +1,6 @@
 import java.util.Random;
 
-//Erik Lopez and Sean Tubbs(smt2436)
+//Erik Lopez(el8779) and Sean Tubbs(smt2436)
 
 public class Main{
    public static void main(String args[]){
@@ -23,7 +23,7 @@ public class Main{
 	   int Arrays[][] = { 
 			   {42,2,9,25,49}
 			   //,hugestArray
-			   ,hugestArrayRandomized
+			   //,hugestArrayRandomized
 	   };
 	   
 	   
@@ -33,7 +33,7 @@ public class Main{
 	   
 	   
 	   
-	   /*
+	   
 	   
 	   
 	   
@@ -52,18 +52,19 @@ public class Main{
 		   System.out.println();
 		   
 		   // Test Q2 implementation with 3 threads
-		   int result = PSearch.parallelSearch(9, A, 4);
+		   int x1 = 42;
+		   int result = PSearch.parallelSearch(x1, A, 4);
 		   
-		   System.out.println("PSearch says the number 9 is at index " + result);
+		   System.out.println("PSearch says the number "+x1+" is at index " + result);
 		   
 	   }
 	   
 
 
-	   */
+	   
 	 
 	   
-	   
+	  /* 
 	   
 	   
 	   System.out.println("***********************");
@@ -104,5 +105,6 @@ public class Main{
 	   // verify if A is sorted
 	   // ... verification code --- written by us. 
 	   // (you do not need to write this code). 
+	    */
    }
 }

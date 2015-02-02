@@ -3,7 +3,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-//Erik Lopez and Sean Tubbs(smt2436)
+//Erik Lopez(el8779) and Sean Tubbs(smt2436)
 
 
 public class PSort implements Runnable {
